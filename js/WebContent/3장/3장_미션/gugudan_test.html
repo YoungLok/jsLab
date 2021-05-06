@@ -11,7 +11,18 @@
 		<tr>
 
 			<script language="javascript">
-				
+				for (var i = 2; i<=9; i++){
+					document.write("<th>"+i+"단</th>");
+				}
+				document.write("<tr>");
+				for (var i = 2; i<=9;i++){
+					document.write("<td>")
+					for (var k = 1 ; k<=9; k++){
+						document.write("<br>"+i+"*"+k+"="+(i*k)+"</br>")
+					}
+					document.write("</td>");
+				}
+				document.write("</tr>");
 			</script>
 
 		</tr>
