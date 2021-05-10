@@ -21,6 +21,7 @@
 <script type="text/javascript" src="jquery-1.9.1.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		console.log($("#tel1, #tel2, #tel3"));
 
 		$("form").submit(function() {
 			var tel1_pattern = /(^01[016789]$)/; //정규식
@@ -30,7 +31,42 @@
 				$("#id").focus();
 				return false;
 			}
-			
+			if(($("#pwd").val()=="") || ($("#pwd").val() !== $("#pwd2").val())){
+				alert ("비밀번호를 확인해 주세요");
+				$("#pwd").focus();
+				return false;
+			}
+			if(!(tel1_pattern.test($("#tel1").val()))){
+				alert("전화번호 앞자리는 010,011,016,017,018,019만 가능합니다");
+				$("#tel1").focus();
+				return false;
+			}
+			if($("#tel2").val().length  != 4){
+				alert("전화번호 두번째 자리는 4글자여야 합니다");
+				return false;
+			}
+			if($("#tel3").val().length  != 4){
+				alert("전화번호 세번째 자리는 4글자여야 합니다");
+				return false;
+			}
+			if($("#job").val()==""){
+				alert("직업을 골라 주세요");
+				return false;
+			}
+			if(!($("#man").is(":checked")||$("#woman").is(":checked"))){
+				alert("성별을 골라주세요");
+				return false;
+			}
+			if($("#addr").val()==""){
+				alert("주소를 입력해 주세요");
+				return false;
+			}
+			if($("#email").val()==""){
+				alert("이메일을 입력해 주세요");
+				return false;
+			}else{
+				alert("ok");
+			};
 			
 			
 			
