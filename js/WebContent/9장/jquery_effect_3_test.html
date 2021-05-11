@@ -9,12 +9,21 @@
 $(function(){
   //"fadeOut"버튼을 클릭했을 때...
     // <h1>이  1초동안 투명해지면서 숨겨집니다.
+    $("#btn1").on("click",function(){
+    	$("h1").fadeOut(1000);
+    });
    
     //"fadeIn"버튼을 클릭했을 때...
      //<h1>이  천천히 선명해지면서 나타납니다.
+      $("#btn2").on("click",function(){
+    	$("h1").fadeIn(1000);
+    });
   
    //"fadeToggle"버튼을 클릭했을 때...
        //<h1>이  빠르게 숨겼다 보였다하게 합니다.
+      $("#btn3").on("click",function(){
+      	$("h1").fadeToggle(1000);
+      });
   
 });
 //]]>
