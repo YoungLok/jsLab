@@ -27,88 +27,124 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link rel="stylesheet" type="text/css"
+	href="css/DataTables/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css"
+	href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+<script type="text/javascript" language="javascript"
+	src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ <script type="text/javascript" language="javascript"
+	src="js/DataTables/jquery.dataTables.min.js"></script>
+	
+	<script type="text/javascript" class="init">
+	
+$(function(e){
+	var link= "https://rss.donga.com/total.xml"
+	
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript">
-$(function(){
 //변수 g에 크로스 도메인의 데이터를 가져올 수 있도록 구글 주소를 저장하였습니다.
   //var g="https://ajax.googleapis.com/ajax/services/feed/load?v=2.0&num=10&callback=?&q=";
-   
-   $("#news_wrap h2 a").on("click",
-   function(e){
-      e.preventDefault(); //<a> 태그에 링크를 차단하였습니다.
-      $("#news_wrap h2 a").removeClass("on"); //<a>에 "on" class를 삭제합니다.
-      $(this).addClass("on"); //클릭한 <a>에 class="on"을 생성합니다.
-      $.ajax({
-        url:$(this).attr("href"), //요청할 데이터 경로.
+  var g = " https://api.rss2json.com/v1/api.json?api_key=zafmvnswz8zblv9t5beikylvv8pbjuzs7jonqdn0&count=100&rss_url=";
+      //$("#news_wrap h2 a").removeClass("on"); //<a>에 "on" class를 삭제합니다.
+  
+      
+     //$(this).addClass("on"); //클릭한 <a>에 class="on"을 생성합니다.
+     
+     
+     function formatDate(d) {
+				var year = "" + d.getFullYear(),
+					month = "" + (d.getMonth() + 1),
+					day = "" + d.getDate(),
+					hour = "" + d.getHours(),
+					minute = "" + d.getMinutes();
+
+				if (month.length < 2) month = "0" + month;
+				if (day.length < 2) day = "0" + day;
+				if (hour.length < 2) hour = "0" + hour;
+				if (minute.length < 2) minute = "0" + minute;
+
+				return year + "-" + month + "-" + day + " " + hour + ":" + minute;
+			};
+  $.ajax({
+        //url:g+$("#tbody a").attr("href"), //요청할 데이터 경로.
+        url:g+link,	
         dataType: "json", //요청할 데이터에 타입.
         success: function (data) { //성공적으로 요청했왔을 때...
         	//obj = JSONtoString(data);
-            var obj = JSON.stringify(data);
+        	var obj = JSON.stringify(data);
         	
-        	$("#news_list").empty(); //<ul>에 하위 요소를 모두 제거합니다.
+        	//$("#news_list").empty(); //<ul>에 하위 요소를 모두 제거합니다.
            //console.log(data.responseData.feed.entries);
 
            //$.each(data.responseData.feed.entries,function(i, d){
-           $.each(data.list,function(i, d){
-              if(i==5) return false;
-              var title=d["unitName"]; //title 키의 값을 가져옵니다.
-              //var date=new Date(d["publishedDate"]); //뉴스 작성 날짜 객체 생성
-              var date=d["sdate"]; //뉴스 작성 날짜 객체 생성 20210511
-              //alert(date);
-              //작성한 년-월-일 형식으로 변수 m에 저장합니다.
-              var yyyy= date.slice(0,4);
-              var mm= date.slice(4,6);
-             var dd= date.slice(6,8);
-              var time= d["stdHour"];
-              var date = yyyy +"-"+mm+"-"+dd+" "+time+"시";
-             // var lk=d["link"];
-              var wc=d["weatherContents"];
-              //앞서 구해온 데이터를 이용해 정보 목록 태그를 생성합니다.
-              $("#news_list").append('<li>'+title+'<span>'+wc+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+date+'</span></li>');
+           $.each(data.items,function(i, d){          	  
+              
+        	
+              var title=d["title"]; //title 키의 값을 가져옵니다.         
+              var pic= d["thumbnail"];         
+              var lk=d["link"];
+              var aut = d["author"];   
+              var date = formatDate(new Date(new Date(d["pubDate"]).getTime() + 32400000));
+              
+              
+              $("#tbody").append('<tr><td><img src="'+pic+'"></td><td style="font-size:1.3em"><a href="'+lk+'" target="_blank">'
+            		  +title+'</a></td><td style="font-size:1.1em">'+aut+'임의</td><td style="font-size:1.3em">'+date+'</td></tr>');
+              
+              
+              
            }); // “$.each” 메서드에 종료
-        } // “success: function”에 종료
+		
+
+        }, // “success: function”에 종료
+        error: function(data){
+        	alert("에러발생하였습니다.");
+        	},
+        complete:function(data) {
+        	$('#example').DataTable({
+				"language" : {
+					"sEmptyTable" : "데이터가 없습니다",
+					"sInfo" : "_START_ - _END_ / _TOTAL_",
+					"sInfoEmpty" : "0 - 0 / 0",
+					"sInfoFiltered" : "(총 _MAX_ 개)",
+					"sInfoPostFix" : "",
+					"sInfoThousands" : ",",
+					"sLengthMenu" : "페이지당 줄수 _MENU_",
+					"sLoadingRecords" : "읽는중...",
+					"sProcessing" : "처리중...",
+					"sSearch" : "검색:",
+					"sZeroRecords" : "검색 결과가 없습니다",
+					"oPaginate" : {
+						"sFirst" : "처음",
+						"sLast" : "마지막",
+						"sNext" : "다음",
+						"sPrevious" : "이전"
+					},
+					"oAria" : {
+						"sSortAscending" : ": 오름차순 정렬",
+						"sSortDescending" : ": 내림차순 정렬"
+					}
+				}
+			});// end of $('#example').DataTable
+   
+        	
+        	
+        	}
+     
+        
       }); // $.ajax() 메서드에 종료
-   }); // 이벤트 on 메서드에 종료
 
-  $("#news_wrap h2 a").eq(0).click(); //최초 첫 번째 탭 버튼을 강제로 클릭시킵니다.
 });
-</script>
-<style type="text/css">
-/*기본 세팅*/
-*{margin:0;padding:0;}
-li{list-style:none;}
-body{font:12px Margun Gothic,"맑은고딕",gulim,"굴림",sans-serif;
-color:#333;padding-top:20px;}
-h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
-a{color:#333;text-decoration:none;outline:none;}
-h1{font-size:2em;text-align:center;margin-bottom:10px;color:#c00;}
 
-/*탭 메뉴 디자인*/
-#news_wrap{width:380px;margin:0 auto;
-  background:#FFF url("images/rss_bg.gif") 0px 30px repeat-x;}
+ </script>
 
-#news_wrap li{height:25px;line-height:25px;position:relative;}
-#news_wrap span{position:absolute;top:0;right:3px;}
-#news_wrap li a{display:block;width:300px;
-   white-space:nowrap;overflow:hidden;
-   text-overflow:ellipsis;padding-left:15px;
-   background:url("images/bullet.gif") 5px 10px no-repeat;
+<style>
+a:visited {
+  color: purple;
 }
-#news_wrap h2{float:left;padding-right:3px;
-margin-bottom:10px;}
-#news_list{clear:both;}
 
-/*비활성화 탭 버튼 모양*/
-#news_wrap h2 a{
-  display:inline-block;padding:8px 10px;
-  border:1px solid #aaa;
-  border-bottom:none;
-  border-radius:5px 5px 0 0;background:#ccc;
-}
-/*비활성화 탭 버튼 모양*/
-#news_wrap h2 a.on{background-color:#fff;font-weight:bold;}
 </style>
+
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -478,7 +514,7 @@ margin-bottom:10px;}
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        날씨
+        동아 일보
         <small>it all starts here</small>
       </h1>
       <ol class="breadcrumb">
@@ -494,7 +530,7 @@ margin-bottom:10px;}
       <!-- Default box -->
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"></h3>
+          <h3 class="box-title"> 뉴스피드 </h3>
 
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
@@ -504,15 +540,28 @@ margin-bottom:10px;}
               <i class="fa fa-times"></i></button>
           </div>
         </div>
-        <div class="box-body" id="news_wrap">
-  <h2> <!-- 초기에 첫 번째 버튼에만 class="on"이 포함되어 있습니다. -->
-    <a href="http://data.ex.co.kr/openapi/restinfo/restWeatherList?key=test&type=json&sdate=20210511&stdHour=10" class="on">
-  오늘의 주요 휴게소 날씨</a>
-  </h2>
-  <ul id="news_list">
-  </ul>
-</div>
-        
+        <div class="box-body content">
+         <table id="example" class="display" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th>썸네일</th>
+					<th>기사제목</th>
+					<th>작성자</th>
+					<th>등록일자</th>
+					
+				</tr>
+			</thead>
+			<tfoot>
+				<hr>
+			</tfoot>
+			<tbody id="tbody">
+				
+  
+  
+			</tbody>
+		</table>
+         
+        </div>
         <!-- /.box-body -->
         <div class="box-footer">
           Footer
@@ -732,7 +781,7 @@ margin-bottom:10px;}
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
-<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<!--  <script src="../../bower_components/jquery/dist/jquery.min.js"></script>-->
 <!-- Bootstrap 3.3.7 -->
 <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- SlimScroll -->
@@ -744,9 +793,13 @@ margin-bottom:10px;}
 <!-- AdminLTE for demo purposes -->
 <script src="../../dist/js/demo.js"></script>
 <script>
+
   $(document).ready(function () {
     $('.sidebar-menu').tree()
   })
 </script>
+
+
 </body>
+
 </html>
