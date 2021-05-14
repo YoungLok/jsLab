@@ -35,6 +35,18 @@
 	src="https://code.jquery.com/jquery-1.12.4.js"></script>
  <script type="text/javascript" language="javascript"
 	src="js/DataTables/jquery.dataTables.min.js"></script>
+	<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+	  pageLanguage:'ko', 
+	  includedLanguages:'ko,ja,en',
+	  layout: google.translate.TranslateElement.InlineLayout.SIMPLE},
+	  'google_translate_element');
+}
+</script><script type="text/javascript" src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+	
+
+	
 	
 	<script type="text/javascript" class="init">
 	
@@ -576,9 +588,11 @@ a:visited {
   <!-- /.content-wrapper -->
 
   <footer class="main-footer">
+   <div id="google_translate_element"></div>
     <div class="pull-right hidden-xs">
       <b>Version</b> 2.4.0
     </div>
+   
     <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
     reserved.
   </footer>
@@ -798,7 +812,6 @@ a:visited {
     $('.sidebar-menu').tree()
   })
 </script>
-
 
 </body>
 
